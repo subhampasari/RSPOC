@@ -12,13 +12,26 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.util.Properties;
+
 @SpringBootApplication
 public class RspocApplication implements CommandLineRunner {
 
 	private static final Logger log = LoggerFactory.getLogger(RspocApplication.class);
 
 	public static void main(String[] args) {
-		SpringApplication.run(RspocApplication.class, args);
+		SpringApplication application = new SpringApplication(RspocApplication.class);
+//		SpringApplication.run(RspocApplication.class, args);
+		Properties properties = new Properties();
+		properties.put("spring.datasource.driver-class-name", "com.amazon.redshift.jdbc42.Driver");
+		properties.put("spring.datasource.url", "jdbc:redshift://redshift-cluster-1.cxjtloxikgod.us-east-1.redshift.amazonaws.com:5439/dev");
+		properties.put("spring.datasource.username", "awsuser");
+		properties.put("spring.datasource.password", "AWSuser1");
+		properties.put("spring.jpa.show-sql", "true");
+		properties.put("spring.jpa.properties.hibernate.dialect", "org.hibernate.dialect.PostgreSQL9Dialect");
+		application.setDefaultProperties(properties);
+
+		application.run(args);
 	}
 
 	@Autowired
@@ -28,10 +41,11 @@ public class RspocApplication implements CommandLineRunner {
 	public void run(String... strings) throws Exception {
 
 		jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS entities(" +
-				"type VARCHAR(255), value VARCHAR(255), timestamp BIGINT)");
+				"type VARCHAR(255), value VARCHAR(255), timestamp BIGINT," +
+				"CONSTRAINT unique_combo UNIQUE (type, value))");
 
 		jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS ref_markers(" +
-				"refName VARCHAR(255), experience VARCHAR(255), feature VARCHAR(255), product VARCHAR(255), timestamp BIGINT)");
+				"refName VARCHAR(255) PRIMARY KEY, experience VARCHAR(255), feature VARCHAR(255), product VARCHAR(255), timestamp BIGINT)");
 	}
 
 	@Configuration
@@ -44,3 +58,21 @@ public class RspocApplication implements CommandLineRunner {
 		}
 	}
 }
+
+//@Configuration
+//@Component
+//class DataSourceBean {
+//
+//	@ConfigurationProperties(prefix = "spring.datasource")
+//	@Bean
+//	@Primary
+//	public DataSource getDataSource() {
+//		return DataSourceBuilder
+//				.create()
+//				.username("awsuser")
+//				.password("AWSuser1")
+//				.url("jdbc:redshift://redshift-cluster-1.cxjtloxikgod.us-east-1.redshift.amazonaws.com:5439/dev")
+////				.driverClassName("com.amazon.redshift.jdbc42.Driver")
+//				.build();
+//	}
+//}
