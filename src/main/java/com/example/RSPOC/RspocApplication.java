@@ -58,21 +58,3 @@ public class RspocApplication implements CommandLineRunner {
 		}
 	}
 }
-
-//@Configuration
-//@Component
-//class DataSourceBean {
-//
-//	@ConfigurationProperties(prefix = "spring.datasource")
-//	@Bean
-//	@Primary
-//	public DataSource getDataSource() {
-//		return DataSourceBuilder
-//				.create()
-//				.username("awsuser")
-//				.password("AWSuser1")
-//				.url("jdbc:redshift://redshift-cluster-1.cxjtloxikgod.us-east-1.redshift.amazonaws.com:5439/dev")
-////				.driverClassName("com.amazon.redshift.jdbc42.Driver")
-//				.build();
-//	}
-//}

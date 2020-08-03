@@ -71,7 +71,7 @@
 		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk-redshift</artifactId>
-			<version>1.11.830</version>
+			<version>1.11.832</version>
 		</dependency>
 
 		<dependency>
